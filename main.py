@@ -1,7 +1,11 @@
+
 import pygame
 import psutil
 import platform
 import cpuinfo
+
+if __name__ != "__main__":
+    exit(0)
 
 info = cpuinfo.get_cpu_info()
 
@@ -19,6 +23,7 @@ pad_mod = 40
 
 pygame.init()
 pygame.display.set_caption('Pynel de Performance')
+
 DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 fim = False
@@ -27,15 +32,12 @@ fonte = pygame.font.SysFont('Verdana', 15)
 small_fonte = pygame.font.SysFont('Verdana', 12)
 small_fonte_bold = pygame.font.SysFont('Verdana', 12, bold=True)
 
-
 # surfaces
 cpu_sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
 hd_sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
 memoria_sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
 menu_sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
 ip_sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
-
-
 
 geral = True
 
@@ -94,8 +96,6 @@ def draw_memoria():
               .format(mem_used_gb, mem_total_gb, mem_perc_used), next_height(1) + 5)
 
 
-
-
 def draw_cpu_geral():
     pygame.draw.rect(cpu_sur, (150, 0, 0), (0, next_height(0, True), WIDTH, 30))
     cpu_usage = psutil.cpu_percent()
@@ -141,10 +141,6 @@ def draw_cpu_detail():
     draw_text(cpu_sur, "Nome do computador na rede: " + platform.node(), next_height(0, small=True), True)
     draw_text(cpu_sur, "Detalhe da Plataforma: " + platform.platform(), next_height(0, small=True), True)
     draw_text(cpu_sur, "Sistema Operacional: " + platform.system(), next_height(0), True)
-
-
-
-
 
 
 def draw_hd():
@@ -263,13 +259,13 @@ while not fim:
 
     draw_menu()
 
-
     pygame.display.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             fim = True
+            exit(0)
             break
 
         if event.type == pygame.KEYDOWN:
@@ -298,5 +294,3 @@ while not fim:
     # faz com que as surfaces sejam pintadas duas vezes por segundo
     if pintar_count >= 15:
         pintar_count = 0
-
-
