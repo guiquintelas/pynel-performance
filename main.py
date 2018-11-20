@@ -9,7 +9,7 @@ if __name__ != "__main__":
 
 info = cpuinfo.get_cpu_info()
 
-WIDTH = 800
+WIDTH = 700
 HEIGHT = 700
 HEIGHT_SUR = 670
 HEIGHT_MENU = 30
@@ -42,6 +42,10 @@ ip_sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
 geral = True
 
 pintar_count = 0
+
+# menu sel sera iniciado em 0
+primeira_tecla = True
+menu_sel = 0
 
 
 def draw_text(tela, text, y, small=False, x=50.0, no_pad=False):
@@ -240,8 +244,7 @@ menus = [
     },
 ]
 
-# menu sel inicial sera o ultimo, para quando apertar para direita virar o primeiro
-menu_sel = len(menus) - 1
+
 
 
 while not fim:
@@ -287,6 +290,10 @@ while not fim:
 
             if event.key == pygame.K_SPACE:
                 geral = not geral
+
+            if primeira_tecla:
+                menu_sel = 0
+                primeira_tecla = False
 
     # incrementa o clock
     pintar_count += 1
