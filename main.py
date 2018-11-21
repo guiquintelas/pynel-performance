@@ -4,6 +4,7 @@ import psutil
 import platform
 import cpuinfo
 
+# impede que a aplicação execute sem ser no main
 if __name__ != "__main__":
     exit(0)
 
@@ -123,11 +124,23 @@ def draw_cpu_detail():
 
     for idx, cpu_perc in enumerate(cpus):
         cpu_x = idx * (cpu_bar_width + cpu_bar_margin * 2) + cpu_bar_margin
-        pygame.draw.rect(cpu_sur, (150, 0, 0), (cpu_x, cpu_y, cpu_bar_width, cpu_bar_height))
-        pygame.draw.rect(cpu_sur, (255, 0, 0), (cpu_x, cpu_y + (cpu_bar_height / 100 * (100 - cpu_perc)), cpu_bar_width, cpu_bar_height / 100 * cpu_perc))
+        pygame.draw.rect(cpu_sur,
+                         (150, 0, 0),
+                         (cpu_x, cpu_y,
+                          cpu_bar_width,
+                          cpu_bar_height))
+        pygame.draw.rect(cpu_sur,
+                         (255, 0, 0),
+                         (cpu_x, cpu_y + (cpu_bar_height / 100 * (100 - cpu_perc)),
+                          cpu_bar_width, cpu_bar_height / 100 * cpu_perc))
 
         perc_text = str(cpu_perc) + "%"
-        draw_text(cpu_sur, perc_text, cpu_y + cpu_bar_height / 2 - 10, x=cpu_x + cpu_bar_width / 2 - text_width(perc_text) / 2, small=True, no_pad=True)
+        draw_text(cpu_sur,
+                  perc_text,
+                  cpu_y + cpu_bar_height / 2 - 10,
+                  x=cpu_x + cpu_bar_width / 2 - text_width(perc_text) / 2,
+                  small=True,
+                  no_pad=True)
 
     add_pad(0, cpu_index - .5)
 
@@ -135,8 +148,8 @@ def draw_cpu_detail():
     draw_text(cpu_sur, "Modelo: %s" % (info["brand"]), next_height(0, small=True), True)
     draw_text(cpu_sur, "Arquitetura: %s" % (info["arch"]), next_height(0, small=True), True)
     draw_text(cpu_sur, "Palavra: %s" % (info["bits"]), next_height(0, small=True), True)
-    draw_text(cpu_sur, "Núcleos: %s" % (psutil.cpu_count()), next_height(0, small=True), True)
-    draw_text(cpu_sur, "Núcleos Físicos: %s" % (psutil.cpu_count(logical=False)), next_height(0, small=True), True)
+    draw_text(cpu_sur, "Threads: %s" % (psutil.cpu_count()), next_height(0, small=True), True)
+    draw_text(cpu_sur, "Núcleos: %s" % (psutil.cpu_count(logical=False)), next_height(0, small=True), True)
     draw_text(cpu_sur, "Frequência Atual: %i" % freq.current, next_height(0, small=True), True)
     draw_text(cpu_sur, "Frequência Total: %i" % freq.max, next_height(0), True)
 
