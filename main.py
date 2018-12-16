@@ -4,7 +4,6 @@ from pynel.modules.hd import HdModule
 from pynel.modules.cpu import CpuModule
 from pynel.modules.memory import MemoryModule
 from pynel.modules.ip import IpModule
-import os
 
 # corrige o erro de abrir duas vezes
 if __name__ != "__main__":
@@ -22,7 +21,6 @@ pintar_count = 0
 # menu sel sera iniciado em 0
 primeira_tecla = True
 menu_sel = 0
-
 
 menus = [
     CpuModule(),
