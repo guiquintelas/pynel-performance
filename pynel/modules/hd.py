@@ -20,7 +20,6 @@ class HdModule(Pynel):
         }
 
         self.mouse_pos = pygame.mouse.get_pos()
-        self.use_update = True
         self.files = []
         self.click = False
 

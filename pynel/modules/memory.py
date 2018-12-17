@@ -6,6 +6,7 @@ import psutil
 class MemoryModule(Pynel):
     def __init__(self):
         super().__init__("Memoria")
+        self.use_update = False
 
     def draw_geral(self):
         self.draw()

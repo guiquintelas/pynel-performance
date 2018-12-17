@@ -5,6 +5,7 @@ import psutil
 class IpModule(Pynel):
     def __init__(self):
         super().__init__("Ip")
+        self.use_update = False
 
     def draw_geral(self):
         self.draw()

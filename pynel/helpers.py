@@ -1,5 +1,4 @@
 from pynel.settings import *
-import pygame
 
 
 def draw_text(tela, text, y, small=False, x=50.0, no_pad=False, color=WHITE):
@@ -27,7 +26,7 @@ class Pynel:
         self.nome = nome
         self.sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
         self.init_height = init_height
-        self.use_update = False
+        self.use_update = True
 
     def update(self, eventos):
         pass

@@ -11,6 +11,7 @@ if info == "":
 class CpuModule(Pynel):
     def __init__(self):
         super().__init__("Cpu")
+        self.use_update = False
 
     def draw(self):
         freq = psutil.cpu_freq()
