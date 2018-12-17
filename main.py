@@ -4,6 +4,7 @@ from pynel.modules.hd import HdModule
 from pynel.modules.cpu import CpuModule
 from pynel.modules.memory import MemoryModule
 from pynel.modules.ip import IpModule
+from pynel.modules.processo import ProcessModule
 
 # corrige o erro de abrir duas vezes
 if __name__ != "__main__":
@@ -26,7 +27,8 @@ menus = [
     CpuModule(),
     MemoryModule(),
     HdModule(),
-    IpModule()
+    IpModule(),
+    ProcessModule()
 ]
 
 
