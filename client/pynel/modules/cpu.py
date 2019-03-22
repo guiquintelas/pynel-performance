@@ -1,4 +1,5 @@
-from pynel.helpers import pygame, text_width, draw_text, pad_mod, WIDTH, Pynel
+from client.pynel.helpers import *
+from client.pynel.settings import *
 import psutil
 import platform
 from cpuinfo import get_cpu_info
@@ -11,7 +12,6 @@ if info == "":
 class CpuModule(Pynel):
     def __init__(self):
         super().__init__("Cpu")
-        self.use_update = False
 
     def draw(self):
         freq = psutil.cpu_freq()

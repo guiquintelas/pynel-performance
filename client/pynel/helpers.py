@@ -1,5 +1,6 @@
-from pynel.settings import *
-
+from client.pynel.settings import *
+from server.chamadas import *
+from client.pynel.connect import request_server
 
 def draw_text(tela, text, y, small=False, x=50.0, no_pad=False, color=WHITE):
     if small:
@@ -21,14 +22,30 @@ def text_width(text):
 
 
 class Pynel:
-    def __init__(self, nome):
+    def __init__(self, nome, use_draw_tick=False):
         self.index = 0
         self.nome = nome
         self.sur = pygame.surface.Surface((WIDTH, HEIGHT_SUR))
         self.init_height = init_height
-        self.use_update = True
+        self.menu_sel = False
+        self.use_draw_tick = use_draw_tick
+
+    def init(self):
+        pass
+
+    def dispose(self):
+        pass
 
     def update(self, eventos):
+        pass
+
+    def update_tick(self, eventos):
+        pass
+
+    def update_geral(self, eventos):
+        pass
+
+    def draw_tick(self):
         pass
 
     def draw(self):

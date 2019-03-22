@@ -1,14 +1,16 @@
-from pynel.settings import pygame, pad_mod, WIDTH, BLACK, HEIGHT_SUR, HEIGHT, HEIGHT_MENU
-from pynel.helpers import draw_text, text_width
-from pynel.modules.hd import HdModule
-from pynel.modules.cpu import CpuModule
-from pynel.modules.memory import MemoryModule
-from pynel.modules.ip import IpModule
-from pynel.modules.processo import ProcessModule
+from client.pynel.settings import pygame, pad_mod, WIDTH, BLACK, HEIGHT_SUR, HEIGHT, HEIGHT_MENU
+from client.pynel.helpers import draw_text, text_width
+from client.pynel.modules.hd import HdModule
+from client.pynel.modules.cpu import CpuModule
+from client.pynel.modules.memory import MemoryModule
+from client.pynel.modules.ip import IpModule
+from client.pynel.modules.processo import ProcessModule
+from client.pynel.connect import SOCKET_ABERTOS
 
 # corrige o erro de abrir duas vezes
 if __name__ != "__main__":
     exit()
+
 
 clock = pygame.time.Clock()
 fim = False
@@ -49,13 +51,26 @@ def draw_menu():
     DISPLAY.blit(menu_sur, (0, HEIGHT_SUR))
 
 
+def update_menu_sel(eventos):
+    if geral:
+        for menu in menus:
+            menu.update_geral(eventos)
+    else:
+        menus[menu_sel].update(eventos)
+
+
 def draw_menu_sel():
     if geral:
         draw_geral()
     else:
         menus[menu_sel].sur.fill(BLACK)
         menus[menu_sel].use_init_height(True)
-        menus[menu_sel].draw()
+
+        if menus[menu_sel].use_draw_tick:
+            menus[menu_sel].draw_tick()
+        else:
+            menus[menu_sel].draw()
+
         DISPLAY.blit(menus[menu_sel].sur, (0, 0))
 
 
@@ -84,13 +99,21 @@ while not fim:
     # pega os eventos
     eventos = pygame.event.get()
 
-    # update o menu
-    menus[menu_sel].update(eventos)
+    # roda a cada tick
+    menus[menu_sel].update_tick(eventos)
 
-    # pintando as surfaces somente quando o count for <= zero
-    if pintar_count <= 0 or menus[menu_sel].use_update:
+    if menus[menu_sel].use_draw_tick:
         DISPLAY.fill(BLACK)
         draw_menu_sel()
+
+    # pintando as surfaces somente quando o count for <= zero
+    if pintar_count <= 0:
+        # update o menu
+        update_menu_sel(eventos)
+
+        if not menus[menu_sel].use_draw_tick:
+            DISPLAY.fill(BLACK)
+            draw_menu_sel()
 
     draw_menu()
 
@@ -100,6 +123,13 @@ while not fim:
         if event.type == pygame.QUIT:
             pygame.quit()
             fim = True
+
+            for menu in menus:
+                menu.dispose()
+
+            for socket in SOCKET_ABERTOS:
+                socket.close()
+
             exit(0)
             break
 
@@ -107,18 +137,28 @@ while not fim:
             pintar_count = -3
 
             if event.key == pygame.K_RIGHT:
+                menus[menu_sel].menu_sel = False
                 geral = False
+
                 menu_sel += 1
 
                 if menu_sel >= len(menus):
                     menu_sel = 0
 
+                if not primeira_tecla:
+                    menus[menu_sel].menu_sel = True
+
             if event.key == pygame.K_LEFT:
+                menus[menu_sel].menu_sel = False
+
                 geral = False
                 menu_sel -= 1
 
                 if menu_sel < 0:
                     menu_sel = len(menus) - 1
+
+                if not primeira_tecla:
+                    menus[menu_sel].menu_sel = True
 
             if event.key == pygame.K_SPACE:
                 geral = not geral
@@ -126,6 +166,7 @@ while not fim:
             if primeira_tecla:
                 menu_sel = 0
                 primeira_tecla = False
+                menus[menu_sel].menu_sel = True
 
     # incrementa o clock
     pintar_count += 1

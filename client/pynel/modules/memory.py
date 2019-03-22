@@ -1,5 +1,5 @@
-from pynel.settings import pygame
-from pynel.helpers import Pynel, WIDTH, draw_text
+from client.pynel.settings import pygame, WIDTH
+from client.pynel.helpers import Pynel, draw_text
 import psutil
 
 

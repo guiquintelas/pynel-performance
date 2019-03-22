@@ -1,7 +1,6 @@
-from pynel.settings import WIDTH, BLACK_GRAY, file_icon, folder_icon
+from client.pynel.helpers import *
+from client.pynel.settings import *
 import psutil
-import pygame
-from pynel.helpers import Pynel, draw_text, get_height
 import os
 import os.path
 import time
@@ -9,8 +8,9 @@ import time
 
 class HdModule(Pynel):
     def __init__(self):
-        super().__init__(nome="Disco")
-        self.path = os.getcwd()
+        super().__init__(nome="Disco", use_draw_tick=True)
+        self.path = "Carregando..."
+        self.pegou_path = False
 
         self.headers = {
             "Tipo": 40,
@@ -23,29 +23,8 @@ class HdModule(Pynel):
         self.files = []
         self.click = False
 
-    def update(self, eventos):
-        self.click = False
-
-        for event in eventos:
-            if event.type == pygame.MOUSEBUTTONUP:
-                self.click = True
-                break
-
-        self.mouse_pos = pygame.mouse.get_pos()
-
-        # listando os arquivos no diretório e agrupando por arquivos e pastas
-        self.files = [{"nome": file, "is_file": os.path.isfile(os.path.join(self.path, file))} for file in os.listdir(self.path)]
-        self.files.sort(key=lambda a: a["is_file"])
-
-        for file in self.files:
-            file["info"] = os.stat(os.path.join(self.path, file["nome"]))
-            file["back"] = False
-
-        self.files.insert(0, {"nome": "..", "is_file": False, "back": True})
-
-    def draw(self):
+    def draw_tick(self):
         self.draw_geral()
-
         draw_text(self.sur, "Arquivos: {}".format(self.path), self.next_height(), small=True, no_pad=True)
 
         # headers
@@ -85,8 +64,6 @@ class HdModule(Pynel):
             pygame.draw.line(self.sur, BLACK_GRAY, (50, self.next_height(same=True)), (WIDTH - 50, self.next_height(same=True)))
             self.add_pad(.2)
 
-
-
     def draw_geral(self):
         disco = psutil.disk_usage('.')
 
@@ -101,3 +78,26 @@ class HdModule(Pynel):
 
         draw_text(self.sur, "Disco: {0:.2f}gb / {1:.2f}gb        {2:.2f}%"
                   .format(used_gb, total_gb, hd_perc_used), self.next_height() + 5)
+
+    def update_tick(self, eventos):
+        self.click = False
+
+        for event in eventos:
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.click = True
+                break
+
+        self.mouse_pos = pygame.mouse.get_pos()
+
+    def update(self, eventos):
+        if not self.pegou_path:
+            request_server(PATH_BASE_DIRETORIO, self.on_path_base_diretorio)
+        else:
+            request_server(LISTA_ARQUIVOS_PATH, self.on_lista_arquivos_path, self.path)
+
+    def on_path_base_diretorio(self, resposta):
+        self.path = resposta
+        self.pegou_path = True
+
+    def on_lista_arquivos_path(self, files):
+        self.files = files
