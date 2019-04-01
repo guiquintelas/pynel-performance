@@ -7,6 +7,7 @@ from client.pynel.modules.ip import IpModule
 from client.pynel.modules.processo import ProcessModule
 from client.pynel.connect import SOCKET_ABERTOS
 
+
 # corrige o erro de abrir duas vezes
 if __name__ != "__main__":
     exit()
@@ -102,7 +103,7 @@ while not fim:
     # roda a cada tick
     menus[menu_sel].update_tick(eventos)
 
-    if menus[menu_sel].use_draw_tick:
+    if menus[menu_sel].use_draw_tick and not geral:
         DISPLAY.fill(BLACK)
         draw_menu_sel()
 

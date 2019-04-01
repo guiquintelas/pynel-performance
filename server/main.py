@@ -2,6 +2,8 @@ from server.chamadas import *
 import socket
 import time
 import threading
+import subprocess
+import platform
 import pickle
 import psutil
 import os
@@ -52,6 +54,57 @@ def lista_arquivos_path(path):
     return pickle.dumps(files)
 
 
+def pegar_adaptadores():
+    return pickle.dumps(psutil.net_if_addrs())
+
+
+def pegar_todos_ips(host):
+    ips = []
+    plataforma = platform.system()
+
+    host = ".".join(host.split(".")[:-1])
+
+    for i in range(1, 255):
+        hostname = f"{host}.{i}"
+
+        if plataforma == "Windows":
+            args = ["ping", "-n", "1", "-l", "1", "-w", "20", hostname]
+
+        else:
+            args = ['ping', '-c', '1', '-W', '1', hostname]
+
+        ret_cod = subprocess.call(args)
+
+        if ret_cod == 0:
+            ips.append(hostname)
+
+    return pickle.dumps(ips)
+
+
+def pegar_ip(host, final):
+    plataforma = platform.system()
+
+    host = ".".join(host.split(".")[:-1])
+
+    hostname = f"{host}.{final}"
+
+    if plataforma == "Windows":
+        args = ["ping", "-n", "1", "-l", "1", "-w", "100", hostname]
+
+    else:
+        args = ['ping', '-c', '1', '-W', '1', hostname]
+
+    ret_cod = subprocess.call(args, stdout=open(os.devnull, "w"), stderr=open(os.devnull, "w"))
+
+    resposta = {
+        "result": ret_cod,
+        "hostname": hostname,
+        "host": host
+    }
+
+    return pickle.dumps(resposta)
+
+
 def receber_solicitacao():
     try:
         message, address = server_socket.recvfrom(10000)
@@ -98,6 +151,15 @@ def receber_solicitacao():
 
     elif message == LISTA_ARQUIVOS_PATH:
         resposta = lista_arquivos_path(*args)
+
+    elif message == PEGAR_ADAPTADORES:
+        resposta = pegar_adaptadores()
+
+    elif message == PEGAR_TODOS_IPS:
+        resposta = pegar_todos_ips(*args)
+
+    elif message == PEGAR_IP:
+        resposta = pegar_ip(*args)
 
     else:
         print("solicitacao invalida! ", message)
