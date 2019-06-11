@@ -89,7 +89,7 @@ def pegar_ip(host, final):
     hostname = f"{host}.{final}"
 
     if plataforma == "Windows":
-        args = ["ping", "-n", "1", "-l", "1", "-w", "100", hostname]
+        args = ["ping", "-n", "1", "-l", "1", "-w", "300", hostname]
 
     else:
         args = ['ping', '-c', '1', '-W', '1', hostname]
