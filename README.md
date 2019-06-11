@@ -49,4 +49,4 @@ Interface
 ![Test Run](https://github.com/guiquintelas/pynel-performance/blob/master/static/rede.png)
 
 - **Processes View**<br>
-![Test Run](https://github.com/guiquintelas/pynel-performance/blob/master/static/processos.png)
+![Test Run](https://github.com/guiquintelas/pynel-performance/blob/master/static/processo.png)
