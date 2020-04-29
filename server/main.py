@@ -108,8 +108,7 @@ def pegar_ip(host, final):
 def receber_solicitacao():
     try:
         message, address = server_socket.recvfrom(10000)
-    except Exception:
-        print("Conexao perdida")
+    except socket.error:
         criar_novo_thread()
         return
 
@@ -176,8 +175,10 @@ def criar_novo_thread():
 
 if __name__ == "__main__":
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server_socket.setblocking(False)
     server_socket.bind((HOST, PORT))
 
     criar_novo_thread()
+    print("Servidor rodando ...")
 
 
